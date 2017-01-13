@@ -1,0 +1,44 @@
+Outside:
+	192.168.0.12	
+
+Kubernetes:
+	master: 192.168.0.42
+	other: 192.168.0.43
+
+On master:
+mkdir <folder>
+cd <folder>
+<MAKE APPLICATION>
+sudo docker build -t test .
+sudo docker tag <SEE ONLINE>
+sudo docker images
+sudo docker push <SEE ONLINE>
+kubectl run test-api --image=<NAME FROM DOCKER HUB> --replicas=2 --port=5000
+kubectl get deployments
+kubectl get pods
+
+# Using proxy
+kubectl proxy --address='0.0.0.0' --port=5000 --accept-hosts='^*$'
+# From oustide: 
+curl http://URL:5000/api/v1/proxy/namespaces/default/pods/<POD NAME FORM kubectl get pods>/
+# My Example URL is 192.168.0.42
+
+# Using NodePort Service
+kubectl expose deployment/api-test --type="NodePort" --port 5000
+kubectl get services/api-test
+kubectl describe services/api-test
+# Locate NodePort port number form above command
+# From outside
+curl <kubernetes_master_IP>:<NodePort Port>
+# My example: curl 192.168.0.42:32154 done from Outside: 192.168.0.12
+
+
+Kubernetes installation followed from:
+http://linoxide.com/devops/setup-kubernetes-1-4-kubeadm-ubuntu/
+
+Docker installation followed from:
+http://containertutorials.com/docker-compose/flask-simple-app.html
+
+Actual Docker image: shank7485/api-container-ipcheck on dockerhub
+GitHub for API code: https://github.com/shank7485/DockerFilesforFun
+
